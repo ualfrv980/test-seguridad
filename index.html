@@ -313,6 +313,60 @@
       5: "#993556",
     };
 
+    // Examen oficial Junio 2025 - Universidad de Almería (18/06/2025)
+    const EXAM_JUNE_2025 = [
+      { id:"e1",  unit:1, type:"mc", q:"¿Qué tipo de ataque consiste en saturar un servidor con múltiples solicitudes para que deje de funcionar?", opts:["Phishing","DDoS","Ransomware","Spoofing"], a:1, exp:"DDoS (Distributed Denial of Service) busca colapsar un servidor enviando tráfico masivo desde múltiples orígenes." },
+      { id:"e2",  unit:1, type:"tf", q:"Una consulta de DNS inversa permite obtener una dirección IP a partir de un nombre de dominio.", a:false, exp:"Al revés: la DNS inversa obtiene el NOMBRE DE DOMINIO a partir de la IP, no la IP a partir del nombre." },
+      { id:"e3",  unit:1, type:"mc", q:"¿Cuál de estos ataques se aprovecha de errores en una base de datos?", opts:["Keylogging","Cross-site scripting","SQL Injection","Backdoor"], a:2, exp:"SQL Injection inyecta código SQL malicioso para manipular o extraer información de la base de datos." },
+      { id:"e4",  unit:1, type:"tf", q:"En un ataque 'activo' por 'denegación de servicio', un intruso altera una parte de la información para su beneficio.", a:false, exp:"El DoS busca interrumpir el servicio, no alterar datos. Alterar datos es un ataque de modificación, no DoS." },
+      { id:"e5",  unit:1, type:"tf", q:"Una forma de identificar el sistema operativo de un equipo es mediante el rastreo de pilas IP.", a:true, exp:"El rastreo de pilas (stack fingerprinting) analiza diferencias en la implementación TCP/IP de cada SO para identificarlo." },
+      { id:"e6",  unit:1, type:"tf", q:"¿La ejecución de un exploit del kernel permite siempre una escalada de privilegios?", a:false, exp:"No siempre: depende del exploit concreto y del sistema. No todos los exploits de kernel garantizan acceso root." },
+      { id:"e7",  unit:1, type:"mc", q:"¿Qué es un ataque de Man-in-the-Middle?", opts:["Acceso físico al dispositivo","Ataque de denegación de servicio","Interceptar y modificar comunicaciones entre dos partes","Envío masivo de correos no deseados"], a:2, exp:"MitM intercepta las comunicaciones entre dos partes sin que estas lo sepan, pudiendo leer o modificar los datos." },
+      { id:"e8",  unit:1, type:"tf", q:"Nikto permite explotar vulnerabilidades de los sistemas GNU/Linux.", a:false, exp:"Nikto es un escáner de vulnerabilidades en servidores web, NO una herramienta de explotación." },
+      { id:"e9",  unit:1, type:"mc", q:"¿Cuál es el principal objetivo de un ataque de ARP-Spoofing?", opts:["Redirigir el tráfico de red a través del atacante para realizar un ataque Man-in-the-Middle","Sobrecargar la red con paquetes ICMP","Infectar dispositivos mediante scripts maliciosos en el navegador","Obtener acceso físico mediante ingeniería inversa"], a:0, exp:"ARP Spoofing envenena la tabla ARP de los equipos para que el tráfico pase por el atacante (MitM)." },
+      { id:"e10", unit:1, type:"mc", q:"¿Cuál de los siguientes ataques aprovecha vulnerabilidades del navegador del cliente?", opts:["Backdoor","SQL Injection","XSS (Cross Site Scripting)","DDoS"], a:2, exp:"XSS inyecta código JavaScript en la web que se ejecuta en el navegador del usuario víctima." },
+      { id:"e11", unit:1, type:"mc", q:"¿Qué es un rootkit?", opts:["Programa que permite el acceso remoto sin ser detectado","Antivirus gratuito","Proxy que permite la redirección de tráfico web","Herramienta de copias de seguridad"], a:0, exp:"Un rootkit oculta su presencia en el sistema y proporciona acceso persistente al atacante sin ser detectado." },
+      { id:"e12", unit:1, type:"mc", q:"¿Qué método o métodos se utilizan para realizar un ataque de fuerza bruta sobre una contraseña?", opts:["Ataque de diccionario","Ataque de generación de contraseñas","Rainbow-tables","Todas son correctas"], a:3, exp:"Un ataque de fuerza bruta puede combinar: diccionarios, generación exhaustiva y rainbow tables." },
+      { id:"e13", unit:1, type:"mc", q:"¿En qué consiste un ataque de tipo VLAN Hopping?", opts:["En el envío de paquetes ARP falsos para redirigir tráfico","En explotar vulnerabilidades del navegador para acceder a VLANs","En aprovechar configuraciones incorrectas de switches para acceder a VLANs no autorizadas","En sobrecargar una VLAN con paquetes ICMP"], a:2, exp:"VLAN Hopping explota configuraciones débiles de switches (p.e. dynamic trunking) para saltar entre VLANs." },
+      { id:"e14", unit:1, type:"mc", q:"¿Cuál es el propósito principal de la herramienta Hydra en ciberseguridad?", opts:["Analizar tráfico DNS","Escanear puertos abiertos en una red local","Realizar ataques de fuerza bruta contra servicios de autenticación","Detectar malware en dispositivos conectados"], a:2, exp:"Hydra (xHydra) es una herramienta de fuerza bruta contra servicios como SSH, FTP, HTTP, RDP, etc." },
+      { id:"e15", unit:1, type:"mc", q:"¿Qué herramienta NO permite detectar las vulnerabilidades de un sistema?", opts:["nmap","Nessus","GFILANGuard","Todas las herramientas permiten detectar vulnerabilidades"], a:3, exp:"nmap (con scripts NSE), Nessus y GFI LANGuard pueden todas detectar vulnerabilidades. La respuesta correcta es 'd) Todas detectan'." },
+      { id:"e16", unit:1, type:"mc", q:"¿Qué permite la vulnerabilidad MS03-026 / CVE-2003-0352 utilizada en las prácticas?", opts:["Atacar un servidor FTP","Atacar el módulo RPC de Windows","Atacar el servicio VNC de Windows","Atacar el servicio RDP de Windows"], a:1, exp:"MS03-026 explota un desbordamiento de buffer en el módulo DCOM RPC de Windows (usada por el gusano Blaster)." },
+      { id:"e17", unit:1, type:"mc", q:"En Metasploit, ¿qué shell permite que el ATACANTE se conecte directamente al servidor víctima?", opts:["win32_adduser","win32_bind","win32_reverse","win32_reverse_vncinject"], a:1, exp:"win32_bind: la víctima abre un puerto y espera. El atacante se conecta a ella. La reverse es lo contrario: la víctima llama al atacante." },
+      { id:"e18", unit:1, type:"mc", q:"En Metasploit, ¿qué permite indicar la acción que quieres realizar en el servidor víctima?", opts:["exploit","encoder","payload","scanner"], a:2, exp:"El payload define qué se ejecutará en el sistema víctima tras explotar la vulnerabilidad (shell, añadir usuario, etc.)." },
+      { id:"e19", unit:1, type:"mc", q:"¿Qué comando permite iniciar la consola de Metasploit?", opts:["start metasploit","msfconsole","run msf","launch exploit"], a:1, exp:"msfconsole es el comando para abrir la consola interactiva de Metasploit desde el terminal." },
+      { id:"e20", unit:1, type:"mc", q:"¿Qué herramienta de la Unidad 1 permite sugerir exploits para realizar escalada de privilegios en Linux?", opts:["linux-exploit-suggester","nmap","metasploit","amap"], a:0, exp:"linux-exploit-suggester analiza la versión del kernel y sugiere exploits aplicables para escalar privilegios." },
+      { id:"e21", unit:2, type:"tf", q:"Con respecto a un servicio de DNS, es recomendable tener separados DNS internos y externos.", a:true, exp:"Separar DNS interno (info privada) y externo (solo info pública) mejora la seguridad evitando revelar la infraestructura interna." },
+      { id:"e22", unit:2, type:"tf", q:"¿Es recomendable que un desarrollador web trabaje directamente en un servidor en producción para programar la web?", a:false, exp:"Nunca se debe desarrollar en producción. El flujo correcto es: desarrollo → staging → producción." },
+      { id:"e23", unit:2, type:"mc", q:"¿Qué fichero en GNU/Linux permite establecer la longitud de las contraseñas?", opts:["/etc/login.defs","/etc/pam.d/common-password","/etc/passwd","/etc/fail2ban/fail2ban.conf"], a:1, exp:"/etc/pam.d/common-password configura el módulo PAM (pam_pwquality) que controla la complejidad y longitud mínima de contraseñas." },
+      { id:"e24", unit:2, type:"tf", q:"Si cambiamos la pancarta (banner) de un servicio como SMTP, dicho servicio dejará de funcionar correctamente.", a:false, exp:"Cambiar el banner solo oculta información del servidor (versión, SO). No afecta en absoluto al funcionamiento del servicio." },
+      { id:"e25", unit:2, type:"mc", q:"¿Qué fichero en GNU/Linux permite establecer el tiempo de vigencia de las contraseñas?", opts:["/etc/login.defs","/etc/pam.d/common-password","/etc/passwd","/etc/fail2ban/fail2ban.conf"], a:0, exp:"/etc/login.defs contiene PASS_MAX_DAYS, PASS_MIN_DAYS y PASS_WARN_AGE para la caducidad de contraseñas." },
+      { id:"e26", unit:2, type:"mc", q:"Indica la medida que puede evitar un ataque LFI en un servidor web.", opts:["Limitar los permisos de ejecución de los usuarios del sistema","Limitar los permisos de apache","Limitar la ejecución de código PHP","Limitar el rendimiento de apache"], a:1, exp:"LFI ocurre cuando apache puede leer ficheros del sistema. Restringir los permisos del usuario apache evita el acceso a ficheros sensibles." },
+      { id:"e27", unit:3, type:"tf", q:"Los Sistemas de Detección de Intrusos permiten detectar comportamientos sospechosos en una red de ordenadores.", a:true, exp:"Los IDS monitorizan el tráfico o el sistema en busca de patrones de ataque o comportamientos anómalos." },
+      { id:"e28", unit:2, type:"mc", q:"¿Cuál es la función principal de Fail2Ban?", opts:["Detectar malware en archivos del sistema","Bloquear direcciones IP después de múltiples intentos fallidos de autenticación","Escanear puertos abiertos en la red","Realizar copias de seguridad automáticas"], a:1, exp:"Fail2Ban monitoriza los logs y banea automáticamente las IPs que superan el número configurado de intentos fallidos." },
+      { id:"e29", unit:2, type:"mc", q:"¿Qué distribución de enrutamiento has utilizado para realizar las prácticas?", opts:["IPCop","VyOS","Fedora","pfsense"], a:3, exp:"pfsense fue la distribución de enrutamiento/firewall usada en las prácticas de Seguridad Informática de la UAL." },
+      { id:"e30", unit:2, type:"mc", q:"Indica el comando de iptables que permite publicar el servicio web del servidor interno 10.0.0.100.", opts:["iptables -t nat -A PREROUTING -i eth0 -p TCP --dport 80 -j DNAT --to 10.0.0.100:80","iptables -t nat -A PREROUTING -i eth0 -j DNAT --to 10.0.0.100","iptables -t nat -A POSTROUTING -i eth0 -p TCP --dport 80 -j DNAT --to 10.0.0.100:80","iptables -t nat -A POSTROUTING -i eth0 -j DNAT --to 10.0.0.100"], a:0, exp:"DNAT en PREROUTING redirige el tráfico entrante por el puerto 80 al servidor interno. Se debe especificar protocolo y puerto." },
+      { id:"e31", unit:2, type:"mc", q:"¿Qué política de iptables establece que todos los paquetes ENTRANTES sean bloqueados por defecto?", opts:["iptables -P OUTPUT DROP","iptables -A INPUT DROP","iptables -P INPUT DROP","iptables --flush"], a:2, exp:"-P establece la política por defecto de la cadena. INPUT controla el tráfico entrante. DROP lo bloquea silenciosamente." },
+      { id:"e32", unit:3, type:"tf", q:"La detección de uso indebido en un IDS se basa en la detección de unos patrones o firmas relacionados con ataques ya conocidos.", a:true, exp:"La detección de patrones/firmas compara el tráfico con una base de datos de ataques conocidos. Es precisa pero no detecta ataques nuevos." },
+      { id:"e33", unit:3, type:"tf", q:"Snort puede trabajar en modo IPS (Sistema de Prevención de Intrusiones).", a:true, exp:"Con el modo Inline (usando fwsnort + iptables), Snort actúa como IPS bloqueando activamente los paquetes maliciosos." },
+      { id:"e34", unit:3, type:"tf", q:"Se considera una actividad anómala la explotación de 'agujeros' del sistema (pe. fallos en servicios web).", a:true, exp:"La explotación de vulnerabilidades es una actividad claramente anómala que un IDS bien configurado debería detectar y alertar." },
+      { id:"e35", unit:3, type:"tf", q:"Un honeypot permite simular uno o varios sistemas informáticos con el fin de tentar a potenciales intrusos.", a:true, exp:"Los honeypots son sistemas trampa que simulan ser vulnerables para atraer a atacantes y estudiar sus técnicas." },
+      { id:"e36", unit:3, type:"tf", q:"No tiene sentido un Sistema de Detección de Intrusos si tenemos un cortafuegos bien configurado.", a:false, exp:"IDS y firewall son complementarios: el firewall bloquea tráfico no permitido, el IDS detecta ataques dentro del tráfico permitido." },
+      { id:"e37", unit:3, type:"tf", q:"El reconocimiento de puertos puede considerarse como una actividad anómala que podría hacer saltar la alarma en un IDS.", a:true, exp:"Un escaneo de puertos es una actividad anómala típica (precede a un ataque) que los IDS están configurados para detectar." },
+      { id:"e38", unit:3, type:"mc", q:"¿Qué parámetros afectan en la configuración de Snort al procesar el tráfico de la red?", opts:["Reglas","Variables de red","Preprocesadores","Todas son correctas"], a:3, exp:"Snort se configura con reglas (qué detectar), variables de red (rangos IP) y preprocesadores (decodificadores de protocolos)." },
+      { id:"e39", unit:3, type:"mc", q:"¿Qué herramienta permite monitorizar el funcionamiento de muchos dispositivos de red (p.ej. router, switch, servidores)?", opts:["Snort","Nagios","Suricata","Iptables"], a:1, exp:"Nagios es la herramienta de monitorización centralizada. Snort y Suricata son IDS/IPS, no herramientas de monitorización general." },
+      { id:"e40", unit:4, type:"tf", q:"Una vez realizado el análisis de las evidencias, se genera un único documento no técnico donde se describe lo descubierto.", a:false, exp:"Se generan DOS documentos: uno técnico (detallado para especialistas) y uno ejecutivo (sin tecnicismos, para la dirección)." },
+      { id:"e41", unit:4, type:"tf", q:"En una copia incremental se copian sólo los archivos de los usuarios.", a:false, exp:"La incremental copia los ficheros MODIFICADOS desde la última copia (de cualquier tipo), no solo los de usuarios." },
+      { id:"e42", unit:4, type:"mc", q:"¿Qué niveles RAID son los que más se utilizan?", opts:["5, 1 y 2","5, 4 y 0+1","0, 1 y 5","0, 3 y 5"], a:2, exp:"RAID 0 (striping/velocidad), RAID 1 (mirroring/redundancia) y RAID 5 (striping+paridad) son los más utilizados en la práctica." },
+      { id:"e43", unit:4, type:"mc", q:"¿Qué comando permite calcular la firma digital (hash) de un fichero en GNU/Linux?", opts:["xIntegrity","md5sum","snort","EasyIDS"], a:1, exp:"md5sum fichero.txt genera el hash MD5 del fichero, utilizado para verificar su integridad." },
+      { id:"e44", unit:4, type:"mc", q:"En los sistemas RAID 0...", opts:["...si falla un disco se conservan los datos","...almacena los bits de paridad en otra unidad","...tiene una capacidad de procesamiento excelente (striping)","...almacenan los bits de paridad distribuidos en todos los discos"], a:2, exp:"RAID 0 usa striping: divide los datos entre discos para máximo rendimiento. No tiene redundancia: si falla un disco se pierden todos los datos." },
+      { id:"e45", unit:4, type:"mc", q:"¿Qué significa la propiedad hot-swap en un disco duro?", opts:["Que tiene una gran transferencia de datos","Permite cambiar un disco duro estropeado sin apagar el equipo","Permite una transferencia de datos a gran velocidad","Permite conectar un gran número de dispositivos"], a:1, exp:"Hot-swap permite sustituir un disco duro averiado en caliente (sin apagar el servidor), garantizando la continuidad del servicio." },
+      { id:"e46", unit:5, type:"tf", q:"El análisis de las evidencias siempre se realiza en el mismo sistema informático que ha sido atacado.", a:false, exp:"El análisis NUNCA se hace en el sistema atacado (se contaminarían las evidencias). Se trabaja sobre imágenes en un sistema aislado." },
+      { id:"e47", unit:5, type:"tf", q:"Si deseamos recuperar una parte del sistema, es más fácil hacerlo con una copia de seguridad completa que con una incremental.", a:true, exp:"Con copia completa basta con restaurar el fichero directamente. Con incremental hay que aplicar todas las copias en orden." },
+      { id:"e48", unit:5, type:"tf", q:"Cuando un sistema ha sido atacado, solo es necesario copiar el sistema de archivos de los usuarios; el resto no suele tener evidencias.", a:false, exp:"Hay que copiar TODOS los sistemas de archivos. Las evidencias pueden encontrarse en cualquier partición del sistema." },
+      { id:"e49", unit:5, type:"tf", q:"Las evidencias más importantes en un análisis forense se encuentran en la memoria principal (RAM).", a:true, exp:"Las evidencias volátiles (RAM) son las más críticas porque se pierden al apagar: procesos, conexiones activas, claves en memoria, etc." },
+      { id:"e50", unit:5, type:"tf", q:"En un análisis forense, sólo se recopilan las evidencias 'no volátiles'.", a:false, exp:"Se recopilan AMBAS: primero las volátiles (RAM, conexiones activas) por su carácter efímero, y después las no volátiles (disco)." },
+    ];
+
     function shuffle(arr) {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -324,6 +378,7 @@
 
     function App() {
       const [screen, setScreen] = useState("menu");
+      const [mode, setMode] = useState("practice"); // "practice" | "exam"
       const [selectedUnits, setSelectedUnits] = useState([1,2,3,4,5]);
       const [questions, setQuestions] = useState([]);
       const [current, setCurrent] = useState(0);
@@ -341,8 +396,10 @@
       }
 
       function startTest() {
-        const pool = shuffle(ALL_QUESTIONS.filter(q => selectedUnits.includes(q.unit)));
-        setQuestions(pool.slice(0, Math.min(50, pool.length)));
+        const pool = mode === "exam"
+          ? EXAM_JUNE_2025
+          : shuffle(ALL_QUESTIONS.filter(q => selectedUnits.includes(q.unit))).slice(0, Math.min(50, ALL_QUESTIONS.filter(q => selectedUnits.includes(q.unit)).length));
+        setQuestions(pool);
         setCurrent(0);
         setAnswered(null);
         setCorrect(0);
@@ -387,59 +444,85 @@
       const nota = total > 0 ? Math.max(0, (score / total) * 10) : 0;
 
       if (screen === "menu") {
+        const practiceOk = mode === "practice" && selectedUnits.length > 0;
+        const examOk = mode === "exam";
+        const canStart = practiceOk || examOk;
         return (
-          <div style={{ padding: "2rem 1rem", maxWidth: 600, margin: "0 auto" }}>
-            <h2 style={{ fontSize: 22, fontWeight: 500, margin: "0 0 0.5rem", color: "var(--color-text-primary)" }}>
-              Test de Seguridad Informática
+          <div style={{ padding: "2rem 1rem 4rem", maxWidth: 600, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 22, fontWeight: 500, margin: "0 0 0.25rem", color: "var(--color-text-primary)" }}>
+              Seguridad Informática
             </h2>
-            <p style={{ fontSize: 14, color: "var(--color-text-secondary)", margin: "0 0 1.5rem" }}>
-              Selecciona las unidades que quieres practicar. Penalización: <strong>1 mal = −1 bien</strong>
+            <p style={{ fontSize: 13, color: "var(--color-text-secondary)", margin: "0 0 1.25rem" }}>
+              Penalización: <strong>1 mal = −1 bien</strong>
             </p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: "1.5rem" }}>
-              {[1,2,3,4,5].map(u => {
-                const sel = selectedUnits.includes(u);
-                const count = ALL_QUESTIONS.filter(q => q.unit === u).length;
+            {/* Selector de modo */}
+            <div style={{ display: "flex", gap: 10, marginBottom: "1.25rem" }}>
+              {[
+                { id: "practice", label: "Test de Práctica", desc: "50 preguntas aleatorias de 220", icon: "ti-books" },
+                { id: "exam",     label: "Examen Jun 2025",  desc: "50 preguntas del examen oficial", icon: "ti-school" },
+              ].map(m => {
+                const active = mode === m.id;
                 return (
-                  <div
-                    key={u}
-                    onClick={() => toggleUnit(u)}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 12,
-                      padding: "12px 16px",
-                      borderRadius: "var(--border-radius-lg)",
-                      border: sel ? `2px solid ${UNIT_COLORS[u]}` : "0.5px solid var(--color-border-tertiary)",
-                      background: sel ? "var(--color-background-secondary)" : "var(--color-background-primary)",
-                      cursor: "pointer", transition: "all 0.15s",
-                    }}
-                  >
-                    <div style={{
-                      width: 20, height: 20, borderRadius: 4,
-                      background: sel ? UNIT_COLORS[u] : "transparent",
-                      border: sel ? `2px solid ${UNIT_COLORS[u]}` : "1.5px solid var(--color-border-secondary)",
-                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-                    }}>
-                      {sel && <i className="ti ti-check" style={{ fontSize: 13, color: "#fff" }} aria-hidden="true" />}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <p style={{ margin: 0, fontWeight: 500, fontSize: 14, color: "var(--color-text-primary)" }}>
-                        {UNIT_NAMES[u]}
-                      </p>
-                    </div>
-                    <span style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>{count} preguntas</span>
+                  <div key={m.id} onClick={() => setMode(m.id)} style={{
+                    flex: 1, padding: "12px 14px",
+                    borderRadius: "var(--border-radius-lg)",
+                    border: active ? "2px solid #185FA5" : "0.5px solid var(--color-border-tertiary)",
+                    background: active ? "#EEF4FB" : "var(--color-background-primary)",
+                    cursor: "pointer", transition: "all 0.15s",
+                  }}>
+                    <i className={`ti ${m.icon}`} style={{ fontSize: 18, color: active ? "#185FA5" : "var(--color-text-secondary)" }} aria-hidden="true" />
+                    <p style={{ margin: "4px 0 2px", fontWeight: 500, fontSize: 13, color: active ? "#185FA5" : "var(--color-text-primary)" }}>{m.label}</p>
+                    <p style={{ margin: 0, fontSize: 11, color: "var(--color-text-secondary)" }}>{m.desc}</p>
                   </div>
                 );
               })}
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: "1rem" }}>
-              <button onClick={() => setSelectedUnits([1,2,3,4,5])} style={{ fontSize: 13, padding: "6px 14px" }}>
-                Todas
-              </button>
-              <button onClick={() => setSelectedUnits([])} style={{ fontSize: 13, padding: "6px 14px" }}>
-                Ninguna
-              </button>
-            </div>
+            {/* Selector de unidades (solo en modo práctica) */}
+            {mode === "practice" && (
+              <>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: "1rem" }}>
+                  {[1,2,3,4,5].map(u => {
+                    const sel = selectedUnits.includes(u);
+                    const count = ALL_QUESTIONS.filter(q => q.unit === u).length;
+                    return (
+                      <div
+                        key={u}
+                        onClick={() => toggleUnit(u)}
+                        style={{
+                          display: "flex", alignItems: "center", gap: 12,
+                          padding: "12px 16px",
+                          borderRadius: "var(--border-radius-lg)",
+                          border: sel ? `2px solid ${UNIT_COLORS[u]}` : "0.5px solid var(--color-border-tertiary)",
+                          background: sel ? "var(--color-background-secondary)" : "var(--color-background-primary)",
+                          cursor: "pointer", transition: "all 0.15s",
+                        }}
+                      >
+                        <div style={{
+                          width: 20, height: 20, borderRadius: 4,
+                          background: sel ? UNIT_COLORS[u] : "transparent",
+                          border: sel ? `2px solid ${UNIT_COLORS[u]}` : "1.5px solid var(--color-border-secondary)",
+                          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                        }}>
+                          {sel && <i className="ti ti-check" style={{ fontSize: 13, color: "#fff" }} aria-hidden="true" />}
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ margin: 0, fontWeight: 500, fontSize: 14, color: "var(--color-text-primary)" }}>
+                            {UNIT_NAMES[u]}
+                          </p>
+                        </div>
+                        <span style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>{count} preguntas</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: "1rem" }}>
+                  <button onClick={() => setSelectedUnits([1,2,3,4,5])} style={{ fontSize: 13, padding: "6px 14px" }}>Todas</button>
+                  <button onClick={() => setSelectedUnits([])} style={{ fontSize: 13, padding: "6px 14px" }}>Ninguna</button>
+                </div>
+              </>
+            )}
 
             <div style={{
               padding: "12px 16px",
@@ -448,28 +531,35 @@
               marginBottom: "1.5rem",
               fontSize: 13, color: "var(--color-text-secondary)"
             }}>
-              {selectedUnits.length === 0 ? "Selecciona al menos una unidad" :
-                (() => {
-                  const total = ALL_QUESTIONS.filter(q => selectedUnits.includes(q.unit)).length;
-                  const n = Math.min(50, total);
-                  return `${n} preguntas aleatorias de ${total} disponibles`;
-                })()
+              {mode === "exam"
+                ? "50 preguntas del Examen de Seguridad Informática – UAL (18/06/2025)"
+                : selectedUnits.length === 0
+                  ? "Selecciona al menos una unidad"
+                  : (() => {
+                      const total = ALL_QUESTIONS.filter(q => selectedUnits.includes(q.unit)).length;
+                      return `${Math.min(50, total)} preguntas aleatorias de ${total} disponibles`;
+                    })()
               }
             </div>
 
             <button
               onClick={startTest}
-              disabled={selectedUnits.length === 0}
+              disabled={!canStart}
               style={{
                 width: "100%", padding: "14px",
                 fontSize: 15, fontWeight: 500,
-                background: selectedUnits.length > 0 ? "#185FA5" : "var(--color-background-secondary)",
-                color: selectedUnits.length > 0 ? "#fff" : "var(--color-text-secondary)",
-                border: "none", borderRadius: "var(--border-radius-lg)", cursor: selectedUnits.length > 0 ? "pointer" : "default",
+                background: canStart ? "#185FA5" : "var(--color-background-secondary)",
+                color: canStart ? "#fff" : "var(--color-text-secondary)",
+                border: "none", borderRadius: "var(--border-radius-lg)", cursor: canStart ? "pointer" : "default",
               }}
             >
-              Empezar test <i className="ti ti-arrow-right" aria-hidden="true" />
+              {mode === "exam" ? "Iniciar Examen" : "Empezar test"} <i className="ti ti-arrow-right" aria-hidden="true" />
             </button>
+
+            {/* Firma */}
+            <p style={{ position: "fixed", bottom: 8, right: 12, margin: 0, fontSize: 11, color: "var(--color-text-secondary)", opacity: 0.55 }}>
+              v1.2.0 · Fran Ruiz
+            </p>
           </div>
         );
       }
@@ -548,6 +638,9 @@
             >
               <i className="ti ti-refresh" aria-hidden="true" /> Volver al menú
             </button>
+            <p style={{ position: "fixed", bottom: 8, right: 12, margin: 0, fontSize: 11, color: "var(--color-text-secondary)", opacity: 0.55 }}>
+              v1.2.0 · Fran Ruiz
+            </p>
           </div>
         );
       }
@@ -706,6 +799,9 @@
               </button>
             )}
           </div>
+          <p style={{ position: "fixed", bottom: 8, right: 12, margin: 0, fontSize: 11, color: "var(--color-text-secondary)", opacity: 0.55 }}>
+            v1.2.0 · Fran Ruiz
+          </p>
         </div>
       );
     }
