@@ -30,12 +30,21 @@
       --border-radius-lg: 12px;
       --border-radius-md: 8px;
     }
+    body.dark {
+      --color-text-primary: #f1f5f9;
+      --color-text-secondary: #94a3b8;
+      --color-background-primary: #1e293b;
+      --color-background-secondary: #0f172a;
+      --color-border-tertiary: #334155;
+      --color-border-secondary: #475569;
+    }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f9fafb;
+      background: var(--color-background-secondary);
       color: var(--color-text-primary);
       -webkit-font-smoothing: antialiased;
+      transition: background 0.2s, color 0.2s;
     }
     button {
       font-family: inherit;
@@ -48,12 +57,21 @@
     }
     button:hover:not(:disabled) { opacity: 0.8; }
     button:disabled { cursor: default; opacity: 0.5; }
+    .dark-toggle {
+      position: fixed; top: 12px; right: 12px; z-index: 100;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; border: 0.5px solid var(--color-border-secondary) !important;
+      background: var(--color-background-primary) !important;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      cursor: pointer; padding: 0;
+    }
   </style>
 </head>
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState } = React;
+    const { useState, useEffect } = React;
 
     const ALL_QUESTIONS = [
       // ===== UNIDAD 1: ATAQUES E INTRODUCCIÓN =====
@@ -367,6 +385,245 @@
       { id:"e50", unit:5, type:"tf", q:"En un análisis forense, sólo se recopilan las evidencias 'no volátiles'.", a:false, exp:"Se recopilan AMBAS: primero las volátiles (RAM, conexiones activas) por su carácter efímero, y después las no volátiles (disco)." },
     ];
 
+    // ===== BIBLIOTECA DE REPASO =====
+    const LIBRARY = [
+      { unit:1, color:"#D85A30", title:"Unidad 1 – Introducción y Ataques", sections:[
+        { title:"Leyes de Seguridad", items:[
+          "Ley 1: Acceso físico al equipo → dejará de ser tuyo (extraer disco, cambiar hardware)",
+          "Ley 2: Si ejecutan una aplicación en tu equipo → dejará de ser tuyo (virus, LFI, SQL Injection)",
+          "Ley 3: Las contraseñas débiles anulan la seguridad fuerte",
+          "Ley 4: La máquina es tan segura como digno de confianza sea su administrador",
+          "Ley 5: Antivirus/sistema no actualizado ≈ tan inseguro como no tenerlo",
+          "Ley 6: El anonimato absoluto no existe (proxy, TOR = privacidad, NO anonimato)",
+          "Ley 7: La tecnología no es una panacea (un router mal configurado no sirve de nada)",
+        ]},
+        { title:"Pilares de la Seguridad (CIA + NR)", items:[
+          "Confidencialidad: solo acceden quienes están autorizados",
+          "Integridad: los datos no han sido alterados sin autorización",
+          "No Repudio: no se puede negar haber realizado una acción",
+          "Disponibilidad: el servicio accesible cuando se necesita",
+          "Amenazas Activas: modifican o interrumpen (DoS, MitM, spoofing, ransomware)",
+          "Amenazas Pasivas: solo escuchan sin modificar (sniffing, espionaje)",
+        ]},
+        { title:"Fases del Vector de Ataque", items:[
+          "1. Identificación de equipos: whois, dnsenum, mensajes ICMP, transferencias de zona DNS",
+          "2. Obtención de información: nmap (puertos), xprobe2/nmap -O (SO), amap/nmap -sV (versiones servicios)",
+          "3. Identificación de vulnerabilidades: Nessus, OpenVAS, nmap --script=vuln, GFI LANGuard",
+          "4. Explotar vulnerabilidades: Metasploit (msfconsole), exploit-db.com, searchsploit",
+          "5. Post-explotación: rootkit, backdoor, troyano, pivoting, escalada de privilegios",
+        ]},
+        { title:"Herramientas Clave", items:[
+          "nmap -sS: SYN scan sigiloso (no completa handshake TCP, menos logs)",
+          "nmap -O: detecta SO | nmap -sV: detecta versiones de servicios | nmap --script=vuln: vulnerabilidades",
+          "Metasploit (msfconsole): usa exploit + payload. Bind shell = víctima espera, atacante se conecta. Reverse = víctima llama al atacante",
+          "win32_bind: el atacante conecta a la víctima | win32_reverse: la víctima conecta al atacante",
+          "Hydra/xHydra: fuerza bruta contra SSH, FTP, HTTP, RDP... (-L usuarios, -P contraseñas)",
+          "OWASP ZAP: proxy web que intercepta/modifica peticiones HTTP entre navegador y servidor",
+          "sqlmap: automatiza SQL Injection (--dbs lista BD, --tables lista tablas, --dump vuelca datos)",
+          "WPScan: auditoría WordPress (plugins vulnerables, usuarios, fuerza bruta)",
+          "linux-exploit-suggester: analiza kernel y sugiere exploits para escalar privilegios",
+          "Nikto: escáner de vulnerabilidades en servidores web (detecta, NO explota)",
+          "CVE-2011-2523: backdoor vsftpd 2.3.4. Trigger = usuario con ':)'. Abre shell en puerto 6200",
+          "MS03-026/CVE-2003-0352: desbordamiento DCOM RPC Windows (gusano Blaster)",
+        ]},
+        { title:"Ataques Web", items:[
+          "XSS (Cross-Site Scripting): inyecta JS malicioso → ejecuta en navegador de la víctima. Reflejado (GET/POST) o Almacenado/persistente (guarda en BD)",
+          "SQL Injection: modifica consultas SQL. Ejemplo: id=1' OR '1'='1 → devuelve todos los registros",
+          "LFI (Local File Inclusion): incluye ficheros locales del servidor (/etc/passwd) via parámetro GET/POST no validado",
+          "RFI (Remote File Inclusion): el servidor ejecuta código PHP alojado en servidor controlado por el atacante",
+          "POODLE: fuerza downgrade a SSLv3 para descifrar comunicaciones HTTPS (nmap --script ssl-poodle)",
+          "Deface: modificación del aspecto visual de una web (como graffiti digital)",
+          "Diccionarios de contraseñas en Kali: /usr/share/wordlists/ (rockyou.txt, etc.)",
+        ]},
+        { title:"Escalada de Privilegios Linux", items:[
+          "Objetivo: pasar de usuario normal ($) a root (#)",
+          "Exploit del kernel: uname -a → buscar versión en linux-exploit-suggester",
+          "Sudoers: sudo -l → si aparece (ALL) NOPASSWD: ALL → escalada directa a root",
+          "Capabilities: getcap -r / 2>/dev/null → ejecutables con cap_setuid u otras capabilities",
+          "Crontab: /etc/crontab → scripts ejecutados como root que sean editables por el usuario",
+          "Contraseñas: John the Ripper sobre /etc/shadow para romper contraseñas débiles",
+          "GTFOBins (gtfobins.github.io): formas de usar binarios legítimos (vim, python, tar) para escalar",
+          "Tras escalar: obtener /etc/shadow, crear usuario, instalar rootkit, cambiar contraseña root",
+        ]},
+      ]},
+      { unit:2, color:"#0F6E56", title:"Unidad 2 – Prevención", sections:[
+        { title:"Niveles de Seguridad", items:[
+          "Datos: ACL, RAID, cifrado",
+          "Servicios: configuración segura, alta disponibilidad, actualización continua",
+          "Perimetral: firewall (iptables), NIDS, VPN, NAT",
+          "Host: autenticación, HIDS (tripwire), actualización del SO",
+          "Física: acceso al CPD, antiincendios, SAI, cableado redundante",
+        ]},
+        { title:"Seguridad Física y CPD", items:[
+          "CPD = lugar más crítico de la empresa (concentra todos los servidores)",
+          "Control de acceso biométrico, armarios rack, ventilación controlada",
+          "SAI/UPS: alimentación ininterrumpida ante cortes de luz (evita apagados bruscos)",
+          "Sistema antiincendios: Novec 1230 o HFC 227ea (gases que no dañan equipos electrónicos)",
+          "Equipos: no en el suelo (inundación), no en altura (caída), cableado estructurado",
+        ]},
+        { title:"Contraseñas y Autenticación en Linux", items:[
+          "/etc/pam.d/common-password → configura complejidad y longitud mínima (pam_pwquality/pam_unix)",
+          "/etc/login.defs → vigencia: PASS_MAX_DAYS, PASS_MIN_DAYS, PASS_WARN_AGE",
+          "/etc/shadow → almacena hashes (solo accesible por root). pwconv migra de passwd a shadow",
+          "Fail2ban: banea IPs tras N intentos fallidos. fail2ban.conf (general) + jail.conf (por servicio: maxretry, bantime)",
+          "John the Ripper: comprobar fortaleza de contraseñas atacando /etc/shadow con diccionarios",
+          "chattr +i fichero → inmutable (ni root modifica/borra). chattr -i → quita la inmutabilidad",
+        ]},
+        { title:"iptables", items:[
+          "Tablas: FILTER (INPUT, OUTPUT, FORWARD) | NAT (PREROUTING, POSTROUTING)",
+          "iptables -P INPUT DROP → política por defecto: bloquear TODO el tráfico entrante",
+          "iptables -L → ver reglas | iptables -F → eliminar todas (sin cambiar políticas) | iptables -A → añadir",
+          "DNAT en PREROUTING (publicar servidor interno): -t nat -A PREROUTING -i eth0 -p TCP --dport 80 -j DNAT --to 10.0.0.100:80",
+          "MASQUERADE en POSTROUTING (NAT de salida): -t nat -A POSTROUTING -s 10.0.0.0/24 -j MASQUERADE",
+          "-j LOG --log-prefix 'TAG' → registra en syslog SIN bloquear el paquete (combinar con DROP para bloquear y logar)",
+          "Persistencia: apt install iptables-persistent → guarda en /etc/iptables/rules.v4",
+          "-i eth0: interfaz de entrada (INPUT/FORWARD) | -o eth0: interfaz de salida (FORWARD/OUTPUT)",
+          "-s 10.0.0.0/24: origen | -d 0.0.0.0/0: destino | -p TCP --dport 80: protocolo y puerto",
+        ]},
+        { title:"Topologías Perimetrales y VPN", items:[
+          "Router simple: un único router filtra el tráfico entre Internet y la red interna",
+          "DMZ/Zona neutra: dos routers con servidores públicos entre ellos. La red interna queda protegida detrás",
+          "Split screened subnet: más compleja, incluye host dual como segunda barrera de seguridad",
+          "NAT: traduce IPs/puertos para aislar la red interna",
+          "Proxy: intermediario a capa 7 (aplicación), puede filtrar por contenido. Proxy inverso (nginx): expone servicios internos",
+          "VPN tipos: Host a red (acceso remoto), Host a host (dos equipos), Red a red (site-to-site)",
+        ]},
+        { title:"Distribuciones de Enrutamiento", items:[
+          "IPCop: GREEN=LAN | BLUE=WiFi | ORANGE=DMZ | RED=Internet. Interfaz web en puerto 81",
+          "VyOS (Debian + CLI Juniper): configure → set opciones → commit (aplica) → save (persiste). Soporta BGP/OSPF/RIP, VPN, IDS",
+          "pfsense (FreeBSD + interfaz web): http://IP. Credenciales por defecto admin/pfsense. Port Forward = DNAT gráfico",
+        ]},
+        { title:"Hardening del Sistema Linux", items:[
+          "tripwire: HIDS que calcula checksums de binarios/configs y alerta si alguno cambia",
+          "chkrootkit / rkhunter: detectan rootkits buscando ficheros y procesos ocultos",
+          "Lynis (lynis audit system): auditoría local completa de seguridad del sistema Linux",
+          "Tiger: analiza el sistema de ficheros buscando vectores de escalada (SUID, rootkits, permisos incorrectos)",
+          "Servicios: deshabilitar los no usados (/etc/inetd, /etc/services), enjaular con chroot",
+          "No usar Telnet/FTP (contraseñas en texto plano). Usar SSH y SFTP/FTPS",
+          "Cambiar banner de servicios (SMTP, SSH): oculta versión sin afectar al funcionamiento",
+          "Registrar toda la actividad del sistema (logs). Usar repositorio de versiones para el software",
+        ]},
+      ]},
+      { unit:3, color:"#185FA5", title:"Unidad 3 – Detección (IDS)", sections:[
+        { title:"Conceptos y Tipos de IDS", items:[
+          "IDS pasivo: detecta y genera alertas (NO actúa sobre el tráfico)",
+          "IDS activo / IPS: detecta Y bloquea el tráfico malicioso en tiempo real",
+          "HIDS (basado en host): monitoriza el propio sistema (logs, ficheros, procesos). Ej: tripwire, md5sum",
+          "NIDS (basado en red): analiza el tráfico de red desde un punto de la infraestructura. Ej: Snort, Suricata",
+          "Detección de firmas/patrones: compara con BD de ataques conocidos → preciso, pero NO detecta 0-days",
+          "Detección de anomalías: aprende perfil normal y detecta desviaciones → detecta 0-days, pero genera falsos positivos",
+          "IDS distribuido: sensores en distintos segmentos → reportan a un correlador central",
+          "Ubicación NIDS: entre router/firewall y switch interno. Port mirroring/SPAN en el switch replica el tráfico al NIDS",
+        ]},
+        { title:"Honeypots", items:[
+          "Sistema trampa que simula ser vulnerable para atraer y estudiar a los atacantes",
+          "Proporciona inteligencia sobre técnicas, herramientas y objetivos del atacante",
+          "HoneyD: simula múltiples SOs en IPs virtuales. Se configura con nmap.prints (firmas SO) y nmap.assoc",
+          "El honeypot NO previene ataques; permite estudiarlos y obtener inteligencia de amenazas",
+        ]},
+        { title:"Snort – Historia y Modos", items:[
+          "1998: Marty Roech crea APE → evoluciona a Snort. Licencia GPL. Comprado por Cisco en 2023",
+          "NIDS de detección de patrones/firmas. Estándar de facto en Internet",
+          "Modo 1 – Sniffer: snort -v (encabezados) / snort -vd (encabezados + datos payload)",
+          "Modo 2 – Packet Logger: snort -dev -l /log (guarda paquetes en disco)",
+          "Modo 3 – NIDS: snort -dev -c snort.conf (analiza tráfico según reglas, genera alertas)",
+          "Modo 4 – Inline/IPS: apt install fwsnort → Snort recibe paquetes de iptables y puede bloquearlos",
+          "Directorios: /etc/snort (configuración) | /etc/snort/rules (reglas) | /var/log/snort (logs y alertas)",
+        ]},
+        { title:"Snort – Configuración y Reglas", items:[
+          "snort.conf: 1) Variables de red (HOME_NET, EXTERNAL_NET, HTTP_SERVERS…) → mejoran rendimiento",
+          "2) Decoder | 3) Base detection engine | 5) Preprocesadores (HTTP, SMTP, SIP…) | 7) Reglas",
+          "Formato regla: alert tcp $EXTERNAL_NET any -> $HOME_NET 80 (msg:'Ataque'; content:'texto'; sid:1001; rev:1;)",
+          "Campos de opciones: msg (texto alerta), content (busca string en payload), sid (ID único), reference, classtype",
+          "Actualizar reglas automáticamente: oinkmaster descarga snortrules-snapshot.tar.gz",
+          "Frontend web de alertas: ACID / BASE | Benchmark: IDSwakeup | Monitor rendimiento: pmgraph",
+          "Suricata: alternativa moderna compatible con reglas Snort, multihilo, actúa como IPS",
+        ]},
+        { title:"Nagios y Monitorización", items:[
+          "Nagios: monitoriza disponibilidad de hosts y servicios (HTTP, DNS, SSH, SMTP, routers, switches…)",
+          "Envía alertas por email/SMS cuando detecta fallos de disponibilidad",
+          "Nagios ≠ Snort: Nagios = disponibilidad de servicios; Snort = detección de ataques en el tráfico",
+          "Centreon: frontend web moderno para Nagios",
+          "md5sum como HIDS básico: calcular checksum de ficheros críticos y comparar periódicamente",
+        ]},
+      ]},
+      { unit:4, color:"#BA7517", title:"Unidad 4 – Copias de Seguridad", sections:[
+        { title:"Tipos de Copias", items:[
+          "Completa (nivel 0): copia TODOS los ficheros. Recuperación directa y sencilla. Ocupa más espacio",
+          "Incremental: solo cambios desde la ÚLTIMA COPIA (cualquier tipo). Restaurar: completa + TODAS las incrementales en orden cronológico",
+          "Diferencial: solo cambios desde la ÚLTIMA COMPLETA (como nivel 1). Restaurar: completa + diferencial (2 pasos). Crece con el tiempo",
+          "Incremental vs Diferencial: incremental = menos espacio | diferencial = restauración más rápida",
+        ]},
+        { title:"Buenas Prácticas", items:[
+          "1. NO copiar en el mismo dispositivo que los datos originales",
+          "2. Verificar las copias realizando pruebas de restauración periódicas",
+          "3. NO almacenar en el mismo recinto físico (incendio, robo, catástrofe natural)",
+          "4. Realizar las copias cuando NO hay usuarios trabajando (no afecta rendimiento ni ficheros abiertos)",
+          "5. Usar herramientas estándar (tar, rsync, dump) en lugar de software propietario específico",
+        ]},
+        { title:"RAID", items:[
+          "RAID 0 (Striping): divide datos entre discos → máximo rendimiento. SIN redundancia → falla 1 disco = pierde TODO",
+          "RAID 1 (Mirroring): espejo exacto entre 2 discos. Tolera fallo de 1 disco. 50% espacio útil",
+          "RAID 5 (Striping + paridad distribuida): velocidad + tolera 1 fallo. Mínimo 3 discos",
+          "RAID 10 (1+0): mirroring de pares + striping entre ellos. Velocidad Y redundancia. Mínimo 4 discos",
+          "Hot-swap: sustituir disco averiado sin apagar el servidor",
+          "Estado degradado: uno o más discos fallaron pero el RAID sigue funcionando → reemplazar urgente",
+          "NAS (Network Attached Storage): dispositivo en red con RAID para centralizar backups de múltiples servidores",
+          "Crear RAID software: mdadm -Cv /dev/md0 -l1 -n2 /dev/sdb /dev/sdc (-l=nivel, -n=nº discos)",
+          "Ver estado: mdadm --detail /dev/md0 | Guardar config: mdadm -Es > /etc/mdadm/mdadm.conf",
+        ]},
+        { title:"Herramientas GNU/Linux", items:[
+          "dd if=/dev/sda of=/dev/sdb → copia bit a bit incluyendo tabla de particiones y espacio vacío",
+          "dd if=/dev/zero of=/dev/sdb → sobreescribe disco con ceros (borrado irreversible)",
+          "tar cvfz backup.tgz /datos → crea backup comprimido (c=crear, v=verbose, f=fichero, z=gzip)",
+          "tar xvf backup.tgz → extrae el backup",
+          "dump 0f /copia.dump /datos → backup completo (nivel 0) | dump 1f: incremental nivel 1",
+          "restore -t -f copia.dump → listar contenido | restore -x -f: restaurar todo | restore -i -f: interactivo",
+          "rsync -av /origen usuario@srv:/destino → sincroniza solo los cambios (eficiente, sobre SSH)",
+          "mysqldump --all-databases > backup.sql → backup completo BD | mysql < backup.sql: restaurar",
+          "cron: MIN HORA DIA MES DIASEM. Ej: '0 0 * * *' = cada día a medianoche",
+          "Amanda: backup automatizado multi-servidor con notificación por email",
+          "Clonezilla: LiveCD GPL para clonar/restaurar discos enteros",
+          "DRBD: replica sistema de ficheros en tiempo real entre servidores (alta disponibilidad)",
+        ]},
+      ]},
+      { unit:5, color:"#993556", title:"Unidad 5 – Análisis Forense", sections:[
+        { title:"Principios Fundamentales", items:[
+          "NUNCA analizar en el sistema atacado → contaminaría las evidencias (timestamps, datos, etc.)",
+          "Trabajar siempre sobre imagen .dd verificada con md5sum (copia forense bit a bit del disco)",
+          "Recopilar PRIMERO evidencias volátiles (antes de apagar el equipo → se pierden al apagar)",
+          "Cadena de custodia: registro documentado de quién, cuándo y cómo manipuló las evidencias → válido legalmente",
+          "Dos informes finales: Técnico (detallado, para especialistas) + Ejecutivo (sin tecnicismos, para dirección)",
+        ]},
+        { title:"Evidencias y Orden de Recopilación", items:[
+          "Volátiles: RAM, procesos activos, conexiones de red, usuarios conectados → SE PIERDEN AL APAGAR",
+          "No volátiles: disco duro, ficheros de log, configuraciones → permanecen tras apagar",
+          "Orden (de más a menos volátil): RAM → conexiones red → procesos → swap → sistema de ficheros → disco",
+          "Copiar TODOS los sistemas de archivos (no solo /home): las evidencias pueden estar en cualquier partición",
+        ]},
+        { title:"Herramientas Forenses", items:[
+          "dd if=/dev/sda of=imagen.dd → crea imagen forense bit a bit | md5sum imagen.dd → verifica integridad",
+          "mount -oloop imagen.dd /ataque/ → monta imagen para análisis SIN modificarla",
+          "chroot /ataque → cambia el root al sistema comprometido para ejecutar sus propios comandos (rpm, apt, etc.)",
+          "Sleuthkit: 21 herramientas en 4 categorías: Data unit (bloques), Metadata (inodos), File name (listados), File system",
+          "Autopsy (GUI sobre Sleuthkit): interfaz web. Organiza casos, navega ficheros borrados (rojo), crea timelines",
+          "Unallocated fragments en Autopsy: bloques libres con ficheros borrados recuperables (si no sobreescritos)",
+          "Timeline: línea temporal cronológica de todos los accesos/modificaciones del sistema de ficheros",
+        ]},
+        { title:"Análisis del Sistema Comprometido", items:[
+          "/var/log/secure: conexiones SSH y autenticaciones (Red Hat). Detectar accesos no autorizados",
+          "/var/log/messages: salto en fechas = el atacante modificó/borró entradas del log",
+          "/root/.bash_history: comandos ejecutados por root. Si el atacante tuvo acceso → sus comandos están aquí",
+          "Directorios ocultos: el atacante crea dirs como '/root/.,' para esconder herramientas maliciosas",
+          "Rootkit: instala cuenta oculta (p.e. usuario 'ssh' con uid=0) para mantener acceso root persistente",
+          "psyBNC (bouncer IRC): proxy para ocultar IP real del atacante en IRC",
+          "Autorouter (awu.tgz): herramienta maliciosa para escanear otras redes buscando nuevas víctimas",
+          "whois IP: identifica propietario/ISP/país de la IP del atacante",
+          "rpm -qar /ataque --queryformat: listar paquetes instalados con fechas (útil para reconstruir timeline del ataque)",
+        ]},
+      ]},
+    ];
+
     function shuffle(arr) {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -379,7 +636,17 @@
     function App() {
       const [screen, setScreen] = useState("menu");
       const [mode, setMode] = useState("practice"); // "practice" | "exam"
+      const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+      const [openUnit, setOpenUnit] = useState(null);
+      const [openSection, setOpenSection] = useState(null);
       const [selectedUnits, setSelectedUnits] = useState([1,2,3,4,5]);
+
+      useEffect(() => {
+        document.body.classList.toggle("dark", darkMode);
+        localStorage.setItem("darkMode", darkMode);
+      }, [darkMode]);
+
+      function toggleDark() { setDarkMode(d => !d); }
       const [questions, setQuestions] = useState([]);
       const [current, setCurrent] = useState(0);
       const [answered, setAnswered] = useState(null);
@@ -443,12 +710,84 @@
       const total = questions.length;
       const nota = total > 0 ? Math.max(0, (score / total) * 10) : 0;
 
+      if (screen === "library") {
+        return (
+          <div style={{ padding: "1.5rem 1rem 5rem", maxWidth: 600, margin: "0 auto" }}>
+            <button className="dark-toggle" onClick={toggleDark} aria-label="Cambiar tema">
+              <i className={`ti ${darkMode ? "ti-sun" : "ti-moon"}`} />
+            </button>
+            <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:"1.25rem" }}>
+              <button onClick={() => setScreen("menu")} style={{ padding:"6px 12px", fontSize:13 }}>
+                <i className="ti ti-arrow-left" /> Volver
+              </button>
+              <h2 style={{ margin:0, fontSize:20, fontWeight:500, color:"var(--color-text-primary)" }}>
+                Biblioteca de Repaso
+              </h2>
+            </div>
+
+            {LIBRARY.map(unit => {
+              const uOpen = openUnit === unit.unit;
+              return (
+                <div key={unit.unit} style={{ marginBottom:10, borderRadius:"var(--border-radius-lg)", overflow:"hidden", border:`1px solid ${uOpen ? unit.color+"66" : "var(--color-border-tertiary)"}` }}>
+                  <div
+                    onClick={() => { setOpenUnit(uOpen ? null : unit.unit); setOpenSection(null); }}
+                    style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 16px", cursor:"pointer", background: uOpen ? unit.color+"15" : "var(--color-background-primary)" }}
+                  >
+                    <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                      <span style={{ width:8, height:8, borderRadius:"50%", background:unit.color, flexShrink:0 }} />
+                      <span style={{ fontWeight:500, fontSize:14, color:"var(--color-text-primary)" }}>{unit.title}</span>
+                    </div>
+                    <i className={`ti ${uOpen ? "ti-chevron-up" : "ti-chevron-down"}`} style={{ color:"var(--color-text-secondary)", fontSize:16 }} />
+                  </div>
+
+                  {uOpen && (
+                    <div style={{ borderTop:`1px solid ${unit.color+"33"}` }}>
+                      {unit.sections.map((sec, si) => {
+                        const sKey = `${unit.unit}-${si}`;
+                        const sOpen = openSection === sKey;
+                        return (
+                          <div key={si} style={{ borderBottom: si < unit.sections.length-1 ? "1px solid var(--color-border-tertiary)" : "none" }}>
+                            <div
+                              onClick={() => setOpenSection(sOpen ? null : sKey)}
+                              style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"11px 16px 11px 24px", cursor:"pointer", background:"var(--color-background-primary)" }}
+                            >
+                              <span style={{ fontSize:13, fontWeight:500, color: unit.color }}>{sec.title}</span>
+                              <i className={`ti ${sOpen ? "ti-chevron-up" : "ti-chevron-right"}`} style={{ color:"var(--color-text-secondary)", fontSize:14 }} />
+                            </div>
+                            {sOpen && (
+                              <div style={{ padding:"4px 16px 12px 24px", background:"var(--color-background-secondary)" }}>
+                                {sec.items.map((item, ii) => (
+                                  <div key={ii} style={{ display:"flex", gap:8, padding:"6px 0", borderBottom: ii < sec.items.length-1 ? "1px solid var(--color-border-tertiary)" : "none" }}>
+                                    <span style={{ color:unit.color, fontSize:12, marginTop:2, flexShrink:0 }}>▸</span>
+                                    <span style={{ fontSize:13, color:"var(--color-text-primary)", lineHeight:1.55 }}>{item}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            <p style={{ position:"fixed", bottom:8, right:12, margin:0, fontSize:11, color:"var(--color-text-secondary)", opacity:0.55 }}>
+              v1.3.0 · Fran Ruiz
+            </p>
+          </div>
+        );
+      }
+
       if (screen === "menu") {
         const practiceOk = mode === "practice" && selectedUnits.length > 0;
         const examOk = mode === "exam";
         const canStart = practiceOk || examOk;
         return (
           <div style={{ padding: "2rem 1rem 4rem", maxWidth: 600, margin: "0 auto" }}>
+            <button className="dark-toggle" onClick={toggleDark} aria-label="Cambiar tema">
+              <i className={`ti ${darkMode ? "ti-sun" : "ti-moon"}`} />
+            </button>
             <h2 style={{ fontSize: 22, fontWeight: 500, margin: "0 0 0.25rem", color: "var(--color-text-primary)" }}>
               Seguridad Informática
             </h2>
@@ -542,32 +881,44 @@
               }
             </div>
 
-            <button
-              onClick={startTest}
-              disabled={!canStart}
-              style={{
-                width: "100%", padding: "14px",
-                fontSize: 15, fontWeight: 500,
-                background: canStart ? "#185FA5" : "var(--color-background-secondary)",
-                color: canStart ? "#fff" : "var(--color-text-secondary)",
-                border: "none", borderRadius: "var(--border-radius-lg)", cursor: canStart ? "pointer" : "default",
-              }}
-            >
-              {mode === "exam" ? "Iniciar Examen" : "Empezar test"} <i className="ti ti-arrow-right" aria-hidden="true" />
-            </button>
+            <div style={{ display:"flex", gap:10 }}>
+              <button
+                onClick={() => setScreen("library")}
+                style={{ flex:"0 0 auto", padding:"14px 18px", fontSize:14, borderRadius:"var(--border-radius-lg)" }}
+                title="Biblioteca de Repaso"
+              >
+                <i className="ti ti-books" style={{ fontSize:18 }} />
+              </button>
+              <button
+                onClick={startTest}
+                disabled={!canStart}
+                style={{
+                  flex:1, padding: "14px",
+                  fontSize: 15, fontWeight: 500,
+                  background: canStart ? "#185FA5" : "var(--color-background-secondary)",
+                  color: canStart ? "#fff" : "var(--color-text-secondary)",
+                  border: "none", borderRadius: "var(--border-radius-lg)", cursor: canStart ? "pointer" : "default",
+                }}
+              >
+                {mode === "exam" ? "Iniciar Examen" : "Empezar test"} <i className="ti ti-arrow-right" aria-hidden="true" />
+              </button>
+            </div>
 
             {/* Firma */}
             <p style={{ position: "fixed", bottom: 8, right: 12, margin: 0, fontSize: 11, color: "var(--color-text-secondary)", opacity: 0.55 }}>
-              v1.2.0 · Fran Ruiz
+              v1.3.0 · Fran Ruiz
             </p>
           </div>
         );
       }
 
       if (screen === "results") {
-        const notaColor = nota >= 5 ? "#0F6E56" : "#993C1D";
+        const notaColor = nota >= 5 ? (darkMode ? "#5DCAA5" : "#0F6E56") : (darkMode ? "#F0997B" : "#993C1D");
         return (
           <div style={{ padding: "2rem 1rem", maxWidth: 600, margin: "0 auto" }}>
+            <button className="dark-toggle" onClick={toggleDark} aria-label="Cambiar tema">
+              <i className={`ti ${darkMode ? "ti-sun" : "ti-moon"}`} />
+            </button>
             <h2 style={{ fontSize: 22, fontWeight: 500, margin: "0 0 1.5rem" }}>Resultados</h2>
 
             <div style={{
@@ -605,13 +956,13 @@
                 <div key={i} style={{
                   padding: "12px 16px",
                   borderRadius: "var(--border-radius-md)",
-                  border: `0.5px solid ${sk ? "var(--color-border-tertiary)" : isCorrect ? "#9FE1CB" : "#F5C4B3"}`,
-                  background: sk ? "var(--color-background-secondary)" : isCorrect ? "#E1F5EE" : "#FAECE7",
+                  border: `0.5px solid ${sk ? "var(--color-border-tertiary)" : isCorrect ? "#5DCAA5" : "#F0997B"}`,
+                  background: sk ? "var(--color-background-secondary)" : isCorrect ? cOk : cErr,
                 }}>
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                     <i
                       className={`ti ${sk ? "ti-minus" : isCorrect ? "ti-check" : "ti-x"}`}
-                      style={{ fontSize: 16, color: sk ? "#888780" : isCorrect ? "#0F6E56" : "#993C1D", flexShrink: 0, marginTop: 2 }}
+                      style={{ fontSize: 16, color: sk ? "var(--color-text-secondary)" : isCorrect ? cOkT : cErrT, flexShrink: 0, marginTop: 2 }}
                       aria-hidden="true"
                     />
                     <div>
@@ -639,7 +990,7 @@
               <i className="ti ti-refresh" aria-hidden="true" /> Volver al menú
             </button>
             <p style={{ position: "fixed", bottom: 8, right: 12, margin: 0, fontSize: 11, color: "var(--color-text-secondary)", opacity: 0.55 }}>
-              v1.2.0 · Fran Ruiz
+              v1.3.0 · Fran Ruiz
             </p>
           </div>
         );
@@ -650,12 +1001,17 @@
       const progress = (current / questions.length) * 100;
       const unitColor = UNIT_COLORS[q.unit];
 
+      const cOk  = darkMode ? "#0d2b1d" : "#E1F5EE";
+      const cErr = darkMode ? "#2b0d0d" : "#FAECE7";
+      const cOkT = darkMode ? "#5DCAA5" : "#0F6E56";
+      const cErrT= darkMode ? "#F0997B" : "#993C1D";
+
       function getOptBg(i) {
         if (answered === null) return "var(--color-background-primary)";
         const isAnswer = q.type === "mc" ? i === q.a : i === (q.a ? 0 : 1);
         const wasChosen = q.type === "mc" ? answered === i : answered === (i === 0);
-        if (isAnswer) return "#E1F5EE";
-        if (wasChosen && !isAnswer) return "#FAECE7";
+        if (isAnswer) return cOk;
+        if (wasChosen && !isAnswer) return cErr;
         return "var(--color-background-secondary)";
       }
       function getOptBorder(i) {
@@ -670,8 +1026,8 @@
         if (answered === null) return null;
         const isAnswer = q.type === "mc" ? i === q.a : i === (q.a ? 0 : 1);
         const wasChosen = q.type === "mc" ? answered === i : answered === (i === 0);
-        if (isAnswer) return <i className="ti ti-check" style={{ color: "#0F6E56", fontSize: 16 }} aria-hidden="true" />;
-        if (wasChosen && !isAnswer) return <i className="ti ti-x" style={{ color: "#993C1D", fontSize: 16 }} aria-hidden="true" />;
+        if (isAnswer) return <i className="ti ti-check" style={{ color: cOkT, fontSize: 16 }} aria-hidden="true" />;
+        if (wasChosen && !isAnswer) return <i className="ti ti-x" style={{ color: cErrT, fontSize: 16 }} aria-hidden="true" />;
         return null;
       }
 
@@ -679,6 +1035,9 @@
 
       return (
         <div style={{ padding: "1.5rem 1rem", maxWidth: 600, margin: "0 auto" }}>
+          <button className="dark-toggle" onClick={toggleDark} aria-label="Cambiar tema">
+            <i className={`ti ${darkMode ? "ti-sun" : "ti-moon"}`} />
+          </button>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
             <span style={{
               fontSize: 11, fontWeight: 500, padding: "3px 10px",
@@ -697,8 +1056,8 @@
           </div>
 
           <div style={{ display: "flex", gap: 16, marginBottom: "0.75rem", fontSize: 13, color: "var(--color-text-secondary)" }}>
-            <span style={{ color: "#0F6E56" }}><i className="ti ti-check" aria-hidden="true" /> {correct}</span>
-            <span style={{ color: "#993C1D" }}><i className="ti ti-x" aria-hidden="true" /> {wrong}</span>
+            <span style={{ color: cOkT }}><i className="ti ti-check" aria-hidden="true" /> {correct}</span>
+            <span style={{ color: cErrT }}><i className="ti ti-x" aria-hidden="true" /> {wrong}</span>
             <span>— {skipped}</span>
             <span style={{ marginLeft: "auto", color: "var(--color-text-primary)", fontWeight: 500 }}>
               Parcial: {(correct - wrong).toFixed(0)}/{questions.length}
@@ -800,7 +1159,7 @@
             )}
           </div>
           <p style={{ position: "fixed", bottom: 8, right: 12, margin: 0, fontSize: 11, color: "var(--color-text-secondary)", opacity: 0.55 }}>
-            v1.2.0 · Fran Ruiz
+            v1.3.0 · Fran Ruiz
           </p>
         </div>
       );
